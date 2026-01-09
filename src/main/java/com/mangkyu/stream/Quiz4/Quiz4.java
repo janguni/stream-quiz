@@ -10,6 +10,15 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ *  [채점 현황]
+ *
+ *          4.1     4.2     4.3     4.4     4.5     4.6     4.7
+ * -----------------------------------------------------------------
+ * 1차       O       O       O       O       O       O       O
+ * 2차       O       O       O       O       O       O       O
+ *
+ */
 public class Quiz4 {
 
     private List<Transaction> transactions;
@@ -34,7 +43,7 @@ public class Quiz4 {
     public List<Transaction> quiz1() {
         List<Transaction> result = transactions.stream()
                 .filter(t -> t.getYear() == 2020)
-                .sorted(Comparator.comparing(Transaction::getValue))
+                .sorted(Comparator.comparing(t -> t.getValue()))
                 .collect(Collectors.toList());
 
         return result;
@@ -52,8 +61,8 @@ public class Quiz4 {
     // 4.3 서울에서 근무하는 모든 거래자를 찾아서 이름순서대로 정렬하라.
     public List<Trader> quiz3() {
         List<Trader> result = transactions.stream()
-                .filter(t -> StringUtils.contains(t.getTrader().getCity(), "Seoul"))
-                .map(t -> t.getTrader())
+                .map(Transaction::getTrader)
+                .filter(trader -> StringUtils.equals(trader.getCity(), "Seoul"))
                 .distinct()
                 .sorted(Comparator.comparing(Trader::getName))
                 .collect(Collectors.toList());
@@ -73,8 +82,8 @@ public class Quiz4 {
     // 4.5 부산에 거래자가 있는지를 확인하라.
     public boolean quiz5() {
         boolean result = transactions.stream()
-                .map(t -> t.getTrader().getCity())
-                .anyMatch(c->c.equals("Busan"));
+                .anyMatch(t -> t.getTrader().getCity().equals("Busan"));
+
         return result;
     }
 
@@ -84,19 +93,21 @@ public class Quiz4 {
                 .filter(t -> t.getTrader().getCity().equals("Seoul"))
                 .map(Transaction::getValue)
                 .collect(Collectors.toList());
+
         return result;
     }
 
     // 4.7 모든 거래 내역중에서 거래 금액의 최댓값과 최솟값을 구하라. 단, 최댓값은 reduce를 이용하고 최솟값은 stream의 min()을 이용하라.
     public Integer[] quiz7() {
-        Integer max = transactions.stream()
-                .map(Transaction::getValue)
-                .reduce(0, Integer::max);
+        int max = transactions.stream()
+                .mapToInt(Transaction::getValue)
+                .max()
+                .orElse(0);
 
-        Integer min = transactions.stream()
-                .map(Transaction::getValue)
-                .min(Integer::compareTo)
-                .orElseThrow(RuntimeException::new);
+        int min = transactions.stream()
+                .mapToInt(Transaction::getValue)
+                .min()
+                .orElse(0);
         return new Integer[]{max, min};
     }
 

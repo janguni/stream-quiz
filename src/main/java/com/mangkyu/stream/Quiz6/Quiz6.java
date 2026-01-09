@@ -3,9 +3,18 @@ package com.mangkyu.stream.Quiz6;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
+import static java.util.stream.Collectors.*;
 
+
+/**
+ *  [채점 현황]
+ *
+ *          6.1     6.2
+ * ------------------------
+ * 1차       X       X
+ * 2차       O       X
+ *
+ */
 public class Quiz6 {
 
     private Student[] stuArr;
